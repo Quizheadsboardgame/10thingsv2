@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color updated */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Added shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/0ZpYRqa.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "What is the name of the famous ship that sank in 1912?", answer: "Titanic" },
+            { question: "What is the largest planet in our solar system?", answer: "Jupiter" },
+            { question: "What is the capital of France?", answer: "Paris" },
+            { question: "What do you call a person who studies the stars and planets?", answer: "Astronomer" },
+            { question: "What is the chemical symbol for water?", answer: "H2O" },
+            { question: "What do you call a baby cat?", answer: "Kitten" },
+            { question: "What is the hardest natural substance on Earth?", answer: "Diamond" },
+            { question: "What is the capital of Australia?", answer: "Canberra" },
+            { question: "Who wrote 'Romeo and Juliet'?", answer: "William Shakespeare" },
+            { question: "What do you call a person who repairs watches?", answer: "Watchmaker" },
+            { question: "What is the smallest continent by land area?", answer: "Australia" },
+            { question: "What is the largest ocean on Earth?", answer: "Pacific Ocean" },
+            { question: "What is the name of the fairy in 'Peter Pan'?", answer: "Tinker Bell" },
+            { question: "What is the name of the famous British rock band with members named John, Paul, George, and Ringo?", answer: "The Beatles" },
+            { question: "What do you call a story that is made up and not real?", answer: "Fiction" },
+            { question: "What is the capital of Italy?", answer: "Rome" },
+            { question: "What is the name of the animal known for its black and white stripes?", answer: "Zebra" },
+            { question: "What is the name of the process by which plants make their own food?", answer: "Photosynthesis" },
+            { question: "What is the name of the famous wizard in 'Harry Potter'?", answer: "Harry Potter" },
+            { question: "What do you call a group of lions?", answer: "Pride" },
+            { question: "What is the largest mammal in the world?", answer: "Blue Whale" },
+            { question: "What is the name of the process by which water changes from a liquid to a gas?", answer: "Evaporation" },
+            { question: "What is the capital of Canada?", answer: "Ottawa" },
+            { question: "What do you call a baby cow?", answer: "Calf" },
+            { question: "What is the name of the famous statue in New York Harbor?", answer: "Statue of Liberty" },
+            { question: "What is the name of the famous physicist who developed the theory of relativity?", answer: "Albert Einstein" },
+            { question: "What is the name of the first manned mission to land on the moon?", answer: "Apollo 11" },
+            { question: "What do you call a person who writes books?", answer: "Author" },
+            { question: "What is the name of the famous natural landmark in the United States known for its large rock formations?", answer: "Grand Canyon" },
+            { question: "What is the chemical symbol for gold?", answer: "Au" },
+            { question: "What is the name of the smallest planet in our solar system?", answer: "Mercury" },
+            { question: "What is the name of the largest land animal?", answer: "Elephant" },
+            { question: "What is the name of the famous Egyptian queen?", answer: "Cleopatra" },
+            { question: "What do you call a young horse?", answer: "Foal" },
+            { question: "What is the capital of Japan?", answer: "Tokyo" },
+            { question: "What is the name of the process by which animals breathe in oxygen and exhale carbon dioxide?", answer: "Respiration" },
+            { question: "What is the name of the famous painter known for his 'Mona Lisa'?", answer: "Leonardo da Vinci" },
+            { question: "What is the name of the largest planet in our solar system?", answer: "Jupiter" },
+            { question: "What is the capital of Brazil?", answer: "Brasília" },
+            { question: "What is the name of the famous scientist who developed the laws of motion?", answer: "Isaac Newton" },
+            { question: "What is the name of the device used to measure temperature?", answer: "Thermometer" },
+            { question: "What is the name of the famous explorer who sailed to America in 1492?", answer: "Christopher Columbus" },
+            { question: "What is the name of the process by which plants absorb nutrients from the soil?", answer: "Absorption" },
+            { question: "What do you call a person who studies insects?", answer: "Entomologist" },
+            { question: "What is the capital of Spain?", answer: "Madrid" },
+            { question: "What is the name of the famous American inventor known for the electric light bulb?", answer: "Thomas Edison" },
+            { question: "What is the name of the process by which plants release oxygen into the air?", answer: "Photosynthesis" },
+            { question: "What is the largest desert in the world?", answer: "Antarctic Desert" },
+            { question: "What do you call a person who repairs shoes?", answer: "Cobler" },
+            { question: "What is the name of the famous landmark in Paris?", answer: "Eiffel Tower" },
+            { question: "What is the name of the smallest bone in the human body?", answer: "Stapes (in the ear)" },
+            { question: "What is the name of the famous American author who wrote 'The Adventures of Tom Sawyer'?", answer: "Mark Twain" },
+            { question: "What is the name of the famous artist who painted 'The Persistence of Memory'?", answer: "Salvador Dalí" },
+            { question: "What is the name of the famous American actress who starred in 'Breakfast at Tiffany's'?", answer: "Audrey Hepburn" },
+            { question: "What is the name of the process by which water turns into ice?", answer: "Freezing" },
+            { question: "What is the capital of Norway?", answer: "Oslo" },
+            { question: "What do you call a baby rabbit?", answer: "Kitten" },
+            { question: "What is the name of the largest volcano in the world?", answer: "Mauna Loa" },
+            { question: "What is the name of the largest fish in the world?", answer: "Whale Shark" },
+            { question: "What is the name of the famous scientist who developed quantum theory?", answer: "Max Planck" },
+            { question: "What is the name of the famous American actor known for his role as 'Indiana Jones'?", answer: "Harrison Ford" },
+            { question: "What is the name of the largest mammal in the world?", answer: "Blue Whale" },
+            { question: "What do you call a young duck?", answer: "Duckling" },
+            { question: "What is the name of the famous author who wrote 'The Hobbit'?", answer: "J.R.R. Tolkien" },
+            { question: "What is the name of the famous American astronaut who first walked on the moon?", answer: "Neil Armstrong" },
+            { question: "What is the capital of Argentina?", answer: "Buenos Aires" },
+            { question: "What is the name of the process by which plants make their own food?", answer: "Photosynthesis" },
+            { question: "What is the name of the famous American singer known for 'Jailhouse Rock'?", answer: "Elvis Presley" },
+            { question: "What is the name of the famous American actor known for his role in 'Forrest Gump'?", answer: "Tom Hanks" },
+            { question: "What is the name of the famous British physicist who developed the theory of electromagnetism?", answer: "Michael Faraday" },
+            { question: "What is the name of the famous American artist known for his 'Campbell's Soup Cans'?", answer: "Andy Warhol" },
+            { question: "What is the name of the famous American film director known for 'E.T. the Extra-Terrestrial'?", answer: "Steven Spielberg" },
+            { question: "What is the capital of Germany?", answer: "Berlin" },
+            { question: "What is the name of the famous American comedian known for his role in 'The Tonight Show'?", answer: "Johnny Carson" },
+            { question: "What is the name of the famous American singer known for 'Billie Jean'?", answer: "Michael Jackson" },
+            { question: "What is the name of the famous American author known for 'Moby-Dick'?", answer: "Herman Melville" },
+            { question: "What is the capital of Greece?", answer: "Athens" },
+            { question: "What is the name of the famous American actor known for his role in 'Taxi Driver'?", answer: "Robert De Niro" },
+            { question: "What is the name of the famous American actress known for her role in 'The Sound of Music'?", answer: "Julie Andrews" },
+            { question: "What is the name of the famous American musician known for 'Rocket Man'?", answer: "Elton John" },
+            { question: "What is the name of the famous American singer known for 'Respect'?", answer: "Aretha Franklin" },
+            { question: "What is the capital of Sweden?", answer: "Stockholm" },
+            { question: "What is the name of the famous American filmmaker known for 'Star Wars'?", answer: "George Lucas" },
+            { question: "What is the name of the famous British scientist known for his work on evolution?", answer: "Charles Darwin" },
+            { question: "What is the name of the famous American author known for 'The Grapes of Wrath'?", answer: "John Steinbeck" },
+            { question: "What is the name of the famous British rock band known for 'Bohemian Rhapsody'?", answer: "Queen" },
+            { question: "What is the name of the famous American musician known for 'Like a Rolling Stone'?", answer: "Bob Dylan" },
+            { question: "What is the capital of Portugal?", answer: "Lisbon" },
+            { question: "What is the name of the famous American actor known for his role in 'The Shawshank Redemption'?", answer: "Tim Robbins" },
+            { question: "What is the name of the famous American musician known for 'Born to Run'?", answer: "Bruce Springsteen" },
+            { question: "What is the name of the famous American artist known for his 'Starry Night' painting?", answer: "Vincent van Gogh" },
+            { question: "What is the capital of India?", answer: "New Delhi" },
+            { question: "What is the name of the largest reptile in the world?", answer: "Saltwater Crocodile" },
+            { question: "What is the name of the famous American singer known for 'Thriller'?", answer: "Michael Jackson" },
+            { question: "What is the capital of South Africa?", answer: "Pretoria" },
+            { question: "What is the name of the famous American author known for 'Little Women'?", answer: "Louisa May Alcott" },
+            { question: "What is the name of the famous scientist known for his laws of motion?", answer: "Isaac Newton" },
+            { question: "What is the name of the famous American artist known for his 'Starry Night' painting?", answer: "Vincent van Gogh" },
+            { question: "What is the capital of Mexico?", answer: "Mexico City" },
+            { question: "What do you call a person who studies birds?", answer: "Ornithologist" },
+            { question: "What is the name of the famous American football team known for their green and gold uniforms?", answer: "Green Bay Packers" },
+            { question: "What is the name of the famous American scientist who discovered electricity?", answer: "Benjamin Franklin" },
+            { question: "What is the name of the famous American artist known for his Campbell's Soup Cans?", answer: "Andy Warhol" },
+            { question: "What is the name of the famous American author known for 'The Catcher in the Rye'?", answer: "J.D. Salinger" },
+            { question: "What is the name of the process by which animals get their food from other organisms?", answer: "Heterotrophy" },
+            { question: "What is the capital of Turkey?", answer: "Ankara" },
+            { question: "What is the name of the famous American inventor known for the phonograph?", answer: "Thomas Edison" },
+            { question: "What is the name of the largest city in the world by population?", answer: "Tokyo" },
+            { question: "What is the name of the famous American artist known for his 'Blue Period'?", answer: "Pablo Picasso" },
+            { question: "What is the name of the largest ocean on Earth?", answer: "Pacific Ocean" },
+            { question: "What is the capital of Egypt?", answer: "Cairo" },
+            { question: "What is the name of the famous American basketball player known for his 'Airness'?", answer: "Michael Jordan" },
+            { question: "What is the name of the famous British author known for 'Harry Potter'?", answer: "J.K. Rowling" },
+            { question: "What is the name of the famous American singer known for 'Like a Virgin'?", answer: "Madonna" },
+            { question: "What is the name of the famous American author known for 'To Kill a Mockingbird'?", answer: "Harper Lee" },
+            { question: "What is the name of the famous American singer known for 'I Will Always Love You'?", answer: "Whitney Houston" },
+            { question: "What is the name of the famous American actor known for 'The Godfather'?", answer: "Marlon Brando" },
+            { question: "What is the name of the famous American filmmaker known for 'Jurassic Park'?", answer: "Steven Spielberg" },
+            { question: "What is the name of the famous American actress known for 'Pretty Woman'?", answer: "Julia Roberts" },
+            { question: "What is the name of the famous American comedian known for 'Saturday Night Live'?", answer: "Eddie Murphy" },
+            { question: "What is the name of the famous American singer known for 'Purple Rain'?", answer: "Prince" },
+            { question: "What is the name of the famous American author known for 'The Great Gatsby'?", answer: "F. Scott Fitzgerald" },
+            { question: "What is the name of the famous American musician known for 'Born to Run'?", answer: "Bruce Springsteen" },
+            { question: "What is the name of the famous American actor known for 'The Shawshank Redemption'?", answer: "Tim Robbins" },
+            { question: "What is the name of the famous American actress known for 'The Devil Wears Prada'?", answer: "Meryl Streep" },
+            { question: "What is the name of the famous American artist known for his 'American Gothic' painting?", answer: "Grant Wood" },
+            { question: "What is the name of the famous American actor known for 'The Silence of the Lambs'?", answer: "Anthony Hopkins" },
+            { question: "What is the name of the famous American singer known for 'My Heart Will Go On'?", answer: "Celine Dion" },
+            { question: "What is the name of the famous American author known for 'Catch-22'?", answer: "Joseph Heller" }
+        ];
+
+        document.getElementById('quizImage').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            const question = questionsAndAnswers[randomIndex].question;
+            const answer = questionsAndAnswers[randomIndex].answer;
+
+            document.getElementById('question').textContent = question;
+            document.getElementById('answer').textContent = answer;
+        });
+    </script>
+</body>
+</html>
